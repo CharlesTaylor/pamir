@@ -1,9 +1,9 @@
 #!/usr/bin/env python
-import os, sys, errno, argparse, subprocess, fnmatch, ConfigParser, shutil
+import os, sys, errno, argparse, subprocess, fnmatch, configparser, shutil
 
 
 def usage():
-	print '\nUsage: python filtering.py VCF REF mrsFAST-min mrsFAST-max workdir TLEN THREADS samplenum mrsfast recalibrate'
+	print('\nUsage: python filtering.py VCF REF mrsFAST-min mrsFAST-max workdir TLEN THREADS samplenum mrsfast recalibrate')
 	sys.exit(-1)
 
 ##############################
@@ -34,7 +34,7 @@ def load_fasta( fasta_file ):
 ################################
 def get_bed_seq( ref_dict, ref, start, end):
 	if ref not in ref_dict:
-		print "Error: " +ref + " not found in reference genome"
+		print("Error: " +ref + " not found in reference genome")
 		exit(-1)
 	return ref_dict[ref][start:end]
 ################################
@@ -52,7 +52,7 @@ def main():
 	#how many bp before the breakpoint and after the breakpoint on ref to get. (1000 for now)
 	TLEN		=	int(sys.argv[6])
 	THREADS		=   int(sys.argv[7])
-	samplenum	=	int(sys.argv[8])
+	samples_txt = sys.argv[8]
 	MRSFAST		= sys.argv[9]
 	RECALIBRATE = sys.argv[10]
 
@@ -143,8 +143,9 @@ def main():
 	coor.close()
 	os.system(MRSFAST + " --index {0}/allinsertions.fa > {0}/mrsfast.index.log".format(folder))
 	input_file = "<(cat"
-	for i in range(1,samplenum+1):
-		input_file = input_file + " {0}/{1}.all_interleaved.fastq".format(workdir, str(i))
+    with open(samples_txt,'r') as hand:
+	    for line in hand:
+		    input_file = input_file + " {0}/{1}/{1}.all_interleaved.fastq".format(workdir, line.rstrip())
 	input_file = input_file+")"
 	cmd = MRSFAST + " --search {0}/allinsertions.fa --pe --min {1} --max {2} -o {0}/seq.mrsfast.sam -e 3 --threads {4} --disable-sam-header --disable-nohits --seq {3} > {0}/seq.mrsfast.sam.log".format(folder, MIN, MAX,input_file,THREADS)
 

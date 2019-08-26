@@ -393,16 +393,19 @@ void print_header(const string &header_file, const string &reference)
 	fclose(fo);
 }
 /****************************************************************/
-void assemble (const string &partition_file, const string &reference, const string &range, const string &out_vcf, int max_len, int read_length, const string &prefix)
+void assemble (const string &partition_file, const string &reference, const string &range, const string &name, int max_len, int read_length, const string &prefix)
 {
 	const double MAX_AT_GC 		= 0.7;
 	const int MAX_REF_LEN		= 300000000;
 	int LENFLAG					= 1000;//500;//1000;
 	char *line 					= new char[MAX_CHAR];
+    string out_vcf = prefix + "/" + name + ".vcf";
 	FILE *fo_vcf 				= fopen(out_vcf.c_str(), "w");
-	string out_vcf_del = out_vcf.substr(0,out_vcf.rfind("."))+string("_DELS")+out_vcf.substr(out_vcf.rfind("x")+1,out_vcf.length());
-	string out_vcf_lq = out_vcf.substr(0,out_vcf.rfind("."))+string("_LOWQUAL")+out_vcf.substr(out_vcf.rfind("x")+1,out_vcf.length());
-	FILE *fo_vcf_del 			= fopen(out_vcf_del.c_str(), "w");
+//	string out_vcf_del = out_vcf.substr(0,out_vcf.rfind("."))+string("_DELS")+out_vcf.substr(out_vcf.rfind("x")+1,out_vcf.length());
+//	string out_vcf_lq = out_vcf.substr(0,out_vcf.rfind("."))+string("_LOWQUAL")+out_vcf.substr(out_vcf.rfind("x")+1,out_vcf.length());
+    string out_vcf_del = prefix + "/" + name + "_DELS.vcf";
+    string out_vcf_lq = prefix  + "/" + name + "_LOW_QUAL.vcf";
+    FILE *fo_vcf_del 			= fopen(out_vcf_del.c_str(), "w");
 	FILE *fo_vcf_lq 			= fopen(out_vcf_lq.c_str(), "w");
 	
 	assembler as(max_len, 15);
@@ -567,8 +570,14 @@ int main(int argc, char **argv)
 		}
 		else if (mode == "partition") {
 			if ( 6 == argc )
-			{
-				partify(argv[2], argv[3], atoi(argv[4]), argv[5]);
+            {
+
+				log_path = argv[5]; log_path += "_partitionprocessor.log";
+
+				log_init( log_path );
+                partify(argv[2], argv[3], atoi(argv[4]), argv[5]);
+
+
 			}
 			else if ( 8 == argc)
 			{
