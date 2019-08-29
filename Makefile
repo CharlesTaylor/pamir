@@ -1,6 +1,6 @@
-CC=g++
-OPT ?= -O2
-FLAGS= $(OPT) -std=c++11 
+CXX ?=g++
+OPT ?= -g
+FLAGS= $(OPT) -std=c++17
 CFLAGS= -c $(FLAGS) -Wfatal-errors
 SOURCES=partition.cc pamir.cc assembler.cc genome.cc aligner.cc extractor.cc common.cc bam_parser.cc sam_parser.cc record.cc sort.cc logger.cc
 LDFLAGS=-lm -lz
@@ -23,10 +23,10 @@ mf:
 snp: $(SOURCES) $(EXECUTABLE)
 
 $(EXECUTABLE): $(OBJECTS) 
-	$(CC) $(OBJECTS) $(LDFLAGS) -o $@
+	$(CXX) $(OBJECTS) $(LDFLAGS) -o $@
 
 .cc.o:
-	$(CC) $(CFLAGS) $< -o $@ 
+	$(CXX) $(CFLAGS) $< -o $@ 
 
 clean:
 	rm -f *.o pamir recalibrate extract_support smoother cleanmega

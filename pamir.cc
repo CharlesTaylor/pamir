@@ -485,7 +485,7 @@ void assemble (const string &partition_file, const string &reference, const stri
 		tmp_ref.clear();//string tmp_ref = ""; 
 		for (int j =0; j <reports.size();j++)
 		{
-			int tmp_end = get<1>(reports[j])+1;
+			int tmp_end = get<1>(reports[j]);
 			tmp_ref += ref.getchar(chrName, tmp_end);
 			//tmp_ref += ref.extract(chrName, tmp_end, tmp_end);
 		}
@@ -493,7 +493,7 @@ void assemble (const string &partition_file, const string &reference, const stri
 		tmp_ref_lq.clear();//string tmp_ref = ""; 
 		for (int j =0; j <reports_lq.size();j++)
 		{
-			int tmp_end = get<1>(reports_lq[j])+1;
+			int tmp_end = get<1>(reports_lq[j]);
 			tmp_ref_lq += ref.getchar(chrName, tmp_end);
 		}
 		append_vcf( chrName, tmp_ref, reports, pt.get_cluster_id(), vcf_info, vcf_info_del);
