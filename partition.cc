@@ -26,6 +26,10 @@ genome_partition::genome_partition (const string &filename, int dist, const unor
 
 	fp = gzopen(filename.c_str(), "r");	
 	gzgets(fp, prev_string, 2000);
+	while(  !strncmp("@", prev_string, 1) )
+	{
+	gzgets(fp, prev_string, 2000);
+	}
 }
 
 genome_partition::~genome_partition ()
@@ -39,13 +43,17 @@ int genome_partition::load_orphan( const string &orphan_contig, const string &oe
 	char rname[MAX_CHAR], gname[MAX_CHAR], cont[MAX_CHAR], readline[MAX_CHAR], tmp[MAX_CHAR];
 	string rstr, cstr;
 	int flag, pos, qual, npos, tlen, z;
+	char del[] = " \t\n";
+	int i;
 
 	// loading orphan contig
 	FILE *fin = fopen( orphan_contig.c_str(), "r");
 	while( NULL != fgets( gname, MAX_CHAR, fin ) )
 	{
 		fgets( cont, MAX_CHAR, fin);
-		rstr = string(gname).substr(1,strlen(gname)-2); // excluding leading char and newline
+		i = strcspn(gname, del);
+		//rstr = string(gname).substr(1,strlen(gname)-2); // excluding leading char and newline
+		rstr = string(gname).substr(1,i-1); // excluding leading char and newline
 		cstr = string(cont).substr(0, strlen(cont)-1); // excluding leading char and newline
 		map_cont[rstr] = cstr;
 	}
