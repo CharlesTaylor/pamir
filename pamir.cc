@@ -308,6 +308,25 @@ void append_vcf(const string &chrName, const string &reference, const vector< tu
 {
 	for(int r=0;r<reports.size();r++)
 	{
+    	if(get<0>(reports[r])== "INS")
+		{
+			vcf_str += 	chrName;	vcf_str += 	"\t";
+			vcf_str +=	std::to_string(get<1>(reports[r]));	vcf_str += "\t.\t";
+			vcf_str +=  reference.at(r);
+			vcf_str +=  "\t";
+            vcf_str += reference.at(r);
+            vcf_str += get<3>(reports[r]);
+            vcf_str +=  "\t";
+			vcf_str +=  std::to_string( get<5>(reports[r]));
+			vcf_str +=  "\tPASS\t";
+//			vcf_str +=  std::to_string( get<2>(reports[r])) ;
+//			vcf_str += 	";END=";	vcf_str +=	std::to_string( get<1>(reports[r]) + get<2>(reports[r])-1 );
+			vcf_str += "Cluster=";	vcf_str +=	std::to_string( clusterId ) ;
+			vcf_str += ";Support=";	vcf_str	+=	std::to_string( get<4>(reports[r])) ;
+//			vcf_str += ";SEQ=";		vcf_str	+=	get<3>(reports[r]);
+			vcf_str += "\n";
+		}
+/*
 		if(get<0>(reports[r])== "INS")
 		{
 			vcf_str += 	chrName;	vcf_str += 	"\t";
@@ -323,7 +342,7 @@ void append_vcf(const string &chrName, const string &reference, const vector< tu
 			vcf_str += ";SEQ=";		vcf_str	+=	get<3>(reports[r]);
 			vcf_str += "\n";
 		}
-	/*	if(get<0>(reports[r])== "DEL")
+    	if(get<0>(reports[r])== "DEL")
 		{
 			vcf_str_del += 	chrName;	vcf_str_del += 	"\t";
 			vcf_str_del +=	std::to_string(get<1>(reports[r]));	vcf_str_del += "\t.\t";
